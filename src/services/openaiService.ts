@@ -14,7 +14,7 @@ export const fetchOpenAIResponse = async (imageBase64: string) => {
                   {
                     role: "user",
                     content: [
-                      { type: "text", text: "make a list of all the pokemon cards that are in the image provided. Please only name the pokemon and include the set number seen at the bottom right" },
+                      { type: "text", text: "From the card image; Please provide only the name of the pokemon on the card (not the evolution) in the top left, include the set number seen at the bottom left or right (careful reading 3 vs 8), and add the set that the card is from ex.prismatic evolutions. Write it in this format '{pokemon} {set #}, {set}', no other text" },
                       {
                         type: "image_url",
                         image_url: {

@@ -9,7 +9,7 @@ export interface EbaySoldItem {
     viewItemURL: string;
   }
 
-export async function searchRecentlyBuyProducts(query: string = "charizard", maxResults: number = 10): Promise<EbaySoldItem[]> {
+export async function searchRecentlyBuyProducts(query: string = "charizard", maxResults: number = 50): Promise<EbaySoldItem[]> {
   try {
     const response = await axios.get(`http://localhost:5000/api/ebay/buy`, {
       params: { query, maxResults },
