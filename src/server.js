@@ -32,7 +32,7 @@ const getEbayOAuthToken = async () => {
       }
     );
     console.log(response.data.access_token)
-    return response.data.access_token; // Return the access token
+    return response.data.access_token;
   } catch (error) {
     console.error("Error fetching eBay OAuth Token:", error.response ? error.response.data : error.message);
     throw new Error("Failed to fetch eBay OAuth Token");
@@ -47,9 +47,10 @@ app.get("/api/ebay/buy", async (req, res) => {
 
     const response = await axios.get(EBAY_FINDING_API_URL, {
       params: {
-        // "category_ids":9355,
-        "q": "charizard",
-        "limit": maxResults,
+        // "category_ids":"183050",
+        "q": "Umbreon 161/131, prismatic evolutions",
+        "limit": 10,
+        "sort": "bestMatch",
         "SECURITY-APPNAME": EBAY_APP_ID,
       },
       headers: {
