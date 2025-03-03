@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { fetchOpenAIResponse } from "./services/openaiService";
+// import { fetchOpenAIResponse } from "./services/openaiService";
+import { searchRecentlyBuyProducts, searchRecentlySoldProducts } from "./services/ebayService";
 
 const App = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [response, setResponse] = useState<string>("");
+  const [response, setResponse] = useState<any>("");
 
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-    });
-  };
+  // const convertFileToBase64 = (file: File): Promise<string> => {
+  //   return new Promise((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.readAsDataURL(file);
+  //       reader.onload = () => resolve(reader.result as string);
+  //       reader.onerror = (error) => reject(error);
+  //   });
+  // };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -27,9 +28,13 @@ const App = () => {
     }
 
     try {
-        const imageBase64 = await convertFileToBase64(selectedFile);
-        const result = await fetchOpenAIResponse(imageBase64);
-        setResponse(result.choices[0].message.content);
+        // const imageBase64 = await convertFileToBase64(selectedFile);
+        // const result = await fetchOpenAIResponse(imageBase64);
+        // setResponse(result.choices[0].message.content);
+
+        const result = await searchRecentlyBuyProducts("charizard");
+        setResponse(result);
+
     } catch (error) {
         console.error("Error processing image:", error);
     }
@@ -44,7 +49,9 @@ const App = () => {
             <button onClick={handleSubmit}>Send</button>
           </div>
           
-          <p>Response: {response}</p>
+          <div>Response: {response && response.map((ele: any, index: any) => {
+            return <div key={index}><a target="_blank" href={ele.itemWebUrl}>{ele.title} : {ele.price.currency} {ele.price.value}</a></div>
+          })}</div>
       </div>
     </div>
   );
