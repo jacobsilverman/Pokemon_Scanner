@@ -102,7 +102,6 @@ const App = () => {
                 <a href={`https://www.tcgplayer.com/search/all/product?q=${ele}&ListingType=Sold`} target="_blank">{ele.split(" ")[0]}</a>
               </div>)
             })}
-
           </div>
 
 
