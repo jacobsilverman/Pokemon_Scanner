@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
 import express from "express";
 import axios from "axios";
 import cors from "cors";
-import "dotenv/config";
+
+dotenv.config();
 const app = express();
 const PORT = 5000;
 
@@ -10,6 +12,8 @@ app.use(express.json());
 
 const EBAY_APP_ID = process.env.EBAY_PROD_APP_ID;
 const EBAY_SECRET_ID = process.env.EBAY_PROD_CERT_ID;
+console.log(EBAY_APP_ID);
+console.log(EBAY_SECRET_ID);
 
 const EBAY_OAUTH_URL = "https://api.ebay.com/identity/v1/oauth2/token";
 const EBAY_FINDING_API_URL = "https://api.ebay.com/buy/browse/v1/item_summary/search";
@@ -48,8 +52,8 @@ app.get("/api/ebay/buy", async (req, res) => {
     const response = await axios.get(EBAY_FINDING_API_URL, {
       params: {
         // "category_ids":"183050",
-        "q": "Umbreon 161/131, prismatic evolutions",
-        "limit": 10,
+        "q": query,
+        "limit": maxResults,
         "sort": "bestMatch",
         "SECURITY-APPNAME": EBAY_APP_ID,
       },
@@ -75,18 +79,22 @@ app.get("/api/ebay/sold", async (req, res) => {
 
     const response = await axios.get(EBAY_SOLD_API_URL, {
       params: {
-        "OPERATION-NAME": "findCompletedItems",
+        // "OPERATION-NAME": "findCompletedItems",
+        // "SERVICE-VERSION": "1.13.0",
+        // "SECURITY-APPNAME": `${EBAY_APP_ID}`,
+        // "keywords": `${query}`,
+        // "itemFilter.name": "SoldItemsOnly",
+        // "itemFilter.value": "true",
+        // "paginationInput.entriesPerPage": `${maxResults}`,
+        "OPERATION-NAME": "findItemsByKeywords",
         "SERVICE-VERSION": "1.13.0",
-        "SECURITY-APPNAME": `${EBAY_APP_ID}`,
+        "SECURITY-APPNAME": EBAY_APP_ID, // No OAuth, just App ID
         "RESPONSE-DATA-FORMAT": "JSON",
-        "REST-PAYLOAD": "true",
-        "keywords": `${query}`,
-        "itemFilter.name": "SoldItemsOnly",
-        "itemFilter.value": "true",
-        "paginationInput.entriesPerPage": `${maxResults}`,
+        "REST-PAYLOAD": "",
+        "keywords": query,
       },
       headers: {
-        'Authorization': `Bearer ${EBAY_SANDBOX_OAUTH_TOKEN}`,
+        "X-EBAY-SOA-SECURITY-APPNAME": EBAY_APP_ID,
         'X-EBAY-C-MARKETPLACE-ID':`EBAY_US`,
         'X-EBAY-C-ENDUSERCTX':`affiliateCampaignId=<ePNCampaignId>,affiliateReferenceId=<referenceId></referenceId>`,
         "Content-Type": "application/json",

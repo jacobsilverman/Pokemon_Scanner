@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { fetchOpenAIResponse } from "./services/openaiService";
-import { searchRecentlyBuyProducts } from "./services/ebayService";
+import BarLoader from "react-spinners/BarLoader";
+import "./App.scss"
+// import { searchRecentlyBuyProducts, searchRecentlySoldProducts } from "./services/ebayService";
 
 const App = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [search, setSearch] = useState<string>("");
-  const [response, setResponse] = useState<any>("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [search, setSearch] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  // const [response, setResponse] = useState<any>("");
 
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -18,7 +22,15 @@ const App = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
+      const file = event.target.files[0];
+      setSelectedFile(file);
+
+      // Convert file to a data URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -27,10 +39,12 @@ const App = () => {
       alert("Please select an image.");
       return;
     }
+    setLoading(true);
 
     try {
       const imageBase64 = await convertFileToBase64(selectedFile);
       const card = await fetchOpenAIResponse(imageBase64);
+      // hard code instead of relying on openai
       // const card = {choices: [
       //   {
       //     message :{
@@ -38,34 +52,72 @@ const App = () => {
       //     }
       //   }
       // ]}
-      const result = await searchRecentlyBuyProducts(card.choices[0].message.content);
+      // const result = await searchRecentlyBuyProducts(card.choices[0].message.content);
 
-      setSearch(card.choices[0].message.content);
-      setResponse(result);
+      //ebay buy works
+      // const result = await searchRecentlySoldProducts(card.choices[0].message.content);
+      const response = card.choices[0].message.content;
+      const match = response.match(/\[([\s\S]*)\]/);
+      const extractedArray = match ? JSON.parse(match[0]) : null;
+      console.log(extractedArray);
+      setSearch(extractedArray);
+      setLoading(false);
+      // setResponse(result);
     } catch (error) {
       console.error("Error processing image:", error);
+      setLoading(false);
     }
   };
 
+  const containerCls = `link-container-${search.length >= 3 ? "3" : search.length >= 2 ? "2" : "1" }`;
   return (
     <div>
-      <h1>Miles and Leon</h1>
+      <h1>Pokemon Card Scanner</h1>
       <div className="main-body">
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+        <div className="file-upload">
+          <label className="file-label">
+            Upload Image
+            <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
+          </label>
+        </div>
+
+        <div>
+          {previewUrl && <img src={previewUrl} alt="Preview" style={{ maxWidth: '300px', marginTop: '10px', borderRadius: '8px' }} />}
+        </div>
+
         <div>
           <button onClick={handleSubmit}>Send</button>
         </div>
-        
-        <div>
-        {search && `Search: ${search}`}
-        {response && response.sort((a: any, b: any) => a.price.value-b.price.value).map((ele: any, index: any) => {
-          return (<div key={index}>
-            <a target="_blank" href={ele.itemWebUrl}>
-              {ele.title} : {ele.price.currency} {ele.price.value}
-            </a>
-          </div>)
-        })}</div>
+        <div className="body">
+          {loading && <BarLoader
+              color="blue"
+              loading={true}
+              aria-label="Loading Spinner"
+              width={300}
+            />}
+
+          <div className={containerCls}>
+            {!loading && search && search.map((ele, index) => {
+              return (<div className="link" key={ele+index}>
+                <a href={`https://www.tcgplayer.com/search/all/product?q=${ele}&ListingType=Sold`} target="_blank">{ele.split(" ")[0]}</a>
+              </div>)
+            })}
+
+          </div>
+
+
+          {/* {response && response.sort((a: any, b: any) => a.price.value-b.price.value).map((ele: any, index: any) => {
+            return (<div key={index}>
+              <a target="_blank" href={ele.itemWebUrl}>
+                {ele.title} : {ele.price.currency} {ele.price.value}
+              </a>
+            </div>)
+          })} */}
+        </div>
       </div>
+      <footer>
+        Happy Birthday Miles and Leon
+      </footer>
     </div>
   );
 };

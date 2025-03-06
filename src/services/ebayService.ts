@@ -30,7 +30,7 @@ export async function searchRecentlySoldProducts(query: string = "charizard", ma
       params: { query, maxResults },
     });
 
-    const items = response.data || [];
+    const items = response.data.findItemsByKeywordsResponse[0].searchResult[0].item || [];
     console.log(items);
     return items;
   } catch (error) {
