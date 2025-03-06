@@ -17,6 +17,7 @@
     "openai": "^4.86.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-spinners": "^0.15.0",
     "sass": "^1.85.1"
   },
   "devDependencies": {
