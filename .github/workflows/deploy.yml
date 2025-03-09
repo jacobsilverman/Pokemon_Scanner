@@ -1,2 +1,0 @@
-env:
-  VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
