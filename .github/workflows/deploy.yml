@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # Allows manual deployment
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
@@ -16,12 +17,18 @@ jobs:
         with:
           node-version: 18
 
-      - run: npm install
+      - run: npm install  # Ensure dependencies are installed
 
       - name: Inject Environment Variables
-        run: echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" > .env
+        run: echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" >> .env
+
+      - name: Debug .env file
+        run: cat .env  # Debugging step to verify the API key is correctly injected
 
       - run: npm run build
+
+      - name: Clean dist directory (remove any exposed secrets)
+        run: rm -rf dist/assets/index-*.js  # Example cleanup step if needed
 
       - uses: peaceiris/actions-gh-pages@v3
         with:
