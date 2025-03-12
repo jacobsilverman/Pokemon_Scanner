@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = "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";
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 const openaiUrl = "https://api.openai.com/v1/chat/completions"; // Example for GPT
 
 
