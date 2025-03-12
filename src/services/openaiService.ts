@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-const openaiUrl = "https://api.openai.com/v1/chat/completions"; // Example for GPT
+const openaiUrl = "https://api.openai.com/v1/chat/completions";  // Example for GPT
 
 
 export const fetchOpenAIResponse = async (imageBase64: string) => {
