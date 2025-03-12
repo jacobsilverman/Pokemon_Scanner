@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = "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";
+const apiKey = "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";
 const openaiUrl = "https://api.openai.com/v1/chat/completions"; // Example for GPT
 
 
