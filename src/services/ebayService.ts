@@ -1,13 +1,13 @@
 import axios from "axios";
 
 export interface EbaySoldItem {
-    title: string;
-    price: string;
-    currency: string;
-    location: string;
-    endTime: string;
-    viewItemURL: string;
-  }
+  title: string;
+  price: string;
+  currency: string;
+  location: string;
+  endTime: string;
+  viewItemURL: string;
+}
 
 export async function searchRecentlyBuyProducts(query: string = "charizard", maxResults: number = 50): Promise<EbaySoldItem[]> {
   try {

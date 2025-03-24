@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchOpenAIResponse } from "./services/openaiService";
+import { fetchOpenAIResponse, fetchOpenAIFetch } from "./services/openaiService";
 import BarLoader from "react-spinners/BarLoader";
 import "./App.scss"
 // import { searchRecentlyBuyProducts, searchRecentlySoldProducts } from "./services/ebayService";
@@ -43,7 +43,7 @@ const App = () => {
 
     try {
       const imageBase64 = await convertFileToBase64(selectedFile);
-      const card = await fetchOpenAIResponse(imageBase64);
+      const card = await fetchOpenAIFetch(imageBase64);
       // hard code instead of relying on openai
       // const card = {choices: [
       //   {

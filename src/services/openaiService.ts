@@ -43,3 +43,17 @@ export const fetchOpenAIResponse = async (imageBase64: string) => {
         throw error;
     }
 };
+
+
+export async function fetchOpenAIFetch(query: string): Promise<any> {
+  try {
+    const response = await axios.post(`http://localhost:5000/pokemonlookup/openai/fetch`, { query }); // <-- Use POST with body
+
+    const items = response.data;
+    console.log(items);
+    return items;
+  } catch (error) {
+    console.error("Error fetching OpenAI call:", error);
+    return [];
+  }
+}
