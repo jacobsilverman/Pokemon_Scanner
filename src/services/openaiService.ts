@@ -2,6 +2,8 @@ import axios from "axios";
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 const openaiUrl = "https://api.openai.com/v1/chat/completions";  // Example for GPT
+const API_URL = 'https://idadog-60ed3202fa90.herokuapp.com';
+// const API_URL = 'http://localhost:5000';
 
 
 export const fetchOpenAIResponse = async (imageBase64: string) => {
@@ -47,7 +49,7 @@ export const fetchOpenAIResponse = async (imageBase64: string) => {
 
 export async function fetchOpenAIFetch(query: string): Promise<any> {
   try {
-    const response = await axios.post(`http://localhost:5000/pokemonlookup/openai/fetch`, { query }); // <-- Use POST with body
+    const response = await axios.post(`${API_URL}/pokemonlookup/openai/fetch`, { query }); // <-- Use POST with body
 
     const items = response.data;
     console.log(items);
