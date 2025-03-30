@@ -8,6 +8,7 @@ const App = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [search, setSearch] = useState<string[]>([]);
+  const [failure, setFailure] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   // const [response, setResponse] = useState<any>("");
 
@@ -57,15 +58,23 @@ const App = () => {
       //ebay buy works
       // const result = await searchRecentlySoldProducts(card.choices[0].message.content);
       const response = card.choices[0].message.content;
+      console.log("response: " + response);
       const match = response.match(/\[([\s\S]*)\]/);
-      const extractedArray = match ? JSON.parse(match[0]) : null;
-      console.log(extractedArray);
+      const extractedArray = match ? JSON.parse(match[0]) : [];
+      if (extractedArray.length === 0){
+        setFailure(true);
+      } else {
+        setFailure(false);
+      }
+      console.log("extractedArray: "+ extractedArray);
       setSearch(extractedArray);
       setLoading(false);
+
       // setResponse(result);
     } catch (error) {
       console.error("Error processing image:", error);
       setLoading(false);
+      setFailure(true);
     }
   };
 
@@ -102,6 +111,7 @@ const App = () => {
                 <a href={`https://www.tcgplayer.com/search/all/product?q=${ele}&ListingType=Sold`} target="_blank">{ele.split(" ")[0]}</a>
               </div>)
             })}
+            {failure && <div>something went wrong please try again</div>}
           </div>
 
 

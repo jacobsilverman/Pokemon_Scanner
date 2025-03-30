@@ -52,7 +52,7 @@ export async function fetchOpenAIFetch(query: string): Promise<any> {
     const response = await axios.post(`${API_URL}/pokemonlookup/openai/fetch`, { query }); // <-- Use POST with body
 
     const items = response.data;
-    console.log(items);
+    console.log("response.data: "+ items);
     return items;
   } catch (error) {
     console.error("Error fetching OpenAI call:", error);
