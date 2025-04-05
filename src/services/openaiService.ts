@@ -2,8 +2,8 @@ import axios from "axios";
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 const openaiUrl = "https://api.openai.com/v1/chat/completions";  // Example for GPT
-// const API_URL = 'https://idadog-60ed3202fa90.herokuapp.com';
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://idadog-60ed3202fa90.herokuapp.com';
+// const API_URL = 'http://localhost:5000';
 
 
 export const fetchOpenAIResponse = async (imageBase64: string) => {
